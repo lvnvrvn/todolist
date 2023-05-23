@@ -15,7 +15,7 @@ function App() {
     },
     {
       id: 3,
-      title: 'почитать книгу',
+      title: 'почитать журнал',
       isDone: true
     }
   ]);

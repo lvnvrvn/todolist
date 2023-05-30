@@ -20,10 +20,8 @@ function App() {
       isDone: true
     }
   ]);
-  // const [isChecked, setIsChecked] = useState()
 
   const input = useRef(null);
-  const checkbox = useRef(null);
 
   function addItem() {
     setItems([...items, {
@@ -32,28 +30,39 @@ function App() {
       isDone: false
     }]);
     input.current.value = '';
-    console.log(items);
   }
 
-  // function removeItem(id) {
-  //   setItems([items.filter(item => item.id !== id)]);
-  // }
+  function removeItem(id) {
+    const newItems = items.filter(item => item.id !== id);
+    setItems(newItems);
+  }
 
   function clear() {
     input.current.value = '';
   }
 
-  console.log('checkbox', checkbox.current?.checked);
+  // function onEnter(e) {
+  //   if (e.keyCode === 13) {
+  //     addItem();
+  //   }
+  // }
+
+  function onEnter(event) {
+    if (event.keyCode == 13) {
+      addItem();
+      console.log(items);
+    }
+  }
 
   return (
     <div className="App">
-      <form className='form' action="/">
-        <input className='input' type="text" ref={input} />
+      <form className='form' action="/" onKeyDown={(e) => {if (e.keyCode == 13) return false;}}>
+        <input className='input' type="text" ref={input} onKeyDown={onEnter} />
         <button className='delete' type='button' onClick={clear}>&#10006;</button>
         <button className='add' type='button' onClick={addItem}>добавить</button>
       </form>
       <ul className='list'>
-        {items.map(item => <Item title={item.title} key={item.id} />)}
+        {items.map(item => <Item item={item} key={item.id} removeItem={removeItem} />)}
       </ul>
     </div>
   );

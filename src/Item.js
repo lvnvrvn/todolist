@@ -1,15 +1,16 @@
 import { useState } from "react";
 
-function Item(props) {
-    const [isChecked, setIsChecked] = useState(false);
+function Item({item, removeItem}) {
+    const [isChecked, setIsChecked] = useState(item.isDone);
 
     return (
-        <li className='item' key={props.id}>
+        <li className='item'>
             <div className='left'>
-              <input className='checkbox' type="checkbox" onClick={() => setIsChecked(!isChecked)} />
-              <div className={`deal ${isChecked && 'done'}`}>{props.title}</div>
+              <input className='checkbox' type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+              {/* <input className='checkbox' type="checkbox" checked={isChecked} onClick={() => setIsChecked(!isChecked)} /> */}
+              <div className={`deal ${isChecked && 'done'}`}>{item.title}</div>
             </div>
-            <button className='remove' type='button'>&#10006;</button>
+            <button className='remove' type='button' onClick={() => removeItem(item.id)}>&#10006;</button>
         </li>
     );
 }

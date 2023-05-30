@@ -73,7 +73,7 @@
   text-decoration: line-through;
 }
 
-/* .checkbox:checked .deal {
+/* .checkbox:checked ~ .deal {
   text-decoration: line-through;
 } */
 

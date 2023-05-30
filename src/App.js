@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function App() {
   const [items, setItems] = useState([
@@ -19,6 +19,7 @@ function App() {
       isDone: true
     }
   ]);
+  // const [isChecked, setIsChecked] = useState()
 
   const input = useRef(null);
   const checkbox = useRef(null);
@@ -40,7 +41,7 @@ function App() {
     input.value = '';
   }
 
-
+  console.log('checkbox', checkbox.current?.checked);
 
   return (
     <div className="App">
@@ -54,7 +55,7 @@ function App() {
           <li className='item' key={item.id}>
             <div className='left'>
               <input className='checkbox' type="checkbox"  ref={checkbox} />
-              <div className={checkbox.checked ? 'deal done' : 'deal'}>{item.title}</div>
+              <div className={`deal ${checkbox.current?.checked && 'done'}`}>{item.title}</div>
             </div>
             <button className='remove' type='button'>&#10006;</button>
           </li>

@@ -1,5 +1,6 @@
 import './App.css';
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Item from './Item';
 
 function App() {
   const [items, setItems] = useState([
@@ -21,44 +22,47 @@ function App() {
   ]);
 
   const input = useRef(null);
-  const checkbox = useRef(null);
 
   function addItem() {
     setItems([...items, {
       id: items.length + 1,
-      title: input.value,
+      title: input.current.value,
       isDone: false
     }]);
-    console.log(items);
+    input.current.value = '';
   }
 
-  // function removeItem(id) {
-  //   setItems([items.filter(item => item.id !== id)]);
-  // }
+  function removeItem(id) {
+    const newItems = items.filter(item => item.id !== id);
+    setItems(newItems);
+  }
 
   function clear() {
-    input.value = '';
+    input.current.value = '';
   }
 
+  // function onEnter(e) {
+  //   if (e.keyCode === 13) {
+  //     addItem();
+  //   }
+  // }
 
+  function onEnter(event) {
+    if (event.keyCode == 13) {
+      addItem();
+      console.log(items);
+    }
+  }
 
   return (
     <div className="App">
-      <form className='form' action="/">
-        <input className='input' type="text" ref={input} />
+      <form className='form' action="/" onKeyDown={(e) => {if (e.keyCode == 13) return false;}}>
+        <input className='input' type="text" ref={input} onKeyDown={onEnter} />
         <button className='delete' type='button' onClick={clear}>&#10006;</button>
         <button className='add' type='button' onClick={addItem}>добавить</button>
       </form>
       <ul className='list'>
-        {items.map(item => (
-          <li className='item' key={item.id}>
-            <div className='left'>
-              <input className='checkbox' type="checkbox"  ref={checkbox} />
-              <div className={checkbox.checked ? 'deal done' : 'deal'}>{item.title}</div>
-            </div>
-            <button className='remove' type='button'>&#10006;</button>
-          </li>
-        ))}
+        {items.map(item => <Item item={item} key={item.id} removeItem={removeItem} />)}
       </ul>
     </div>
   );

@@ -1,5 +1,6 @@
 import './App.css';
 import { useState, useEffect, useRef } from 'react';
+import Item from './Item';
 
 function App() {
   const [items, setItems] = useState([
@@ -27,9 +28,10 @@ function App() {
   function addItem() {
     setItems([...items, {
       id: items.length + 1,
-      title: input.value,
+      title: input.current.value,
       isDone: false
     }]);
+    input.current.value = '';
     console.log(items);
   }
 
@@ -38,7 +40,7 @@ function App() {
   // }
 
   function clear() {
-    input.value = '';
+    input.current.value = '';
   }
 
   console.log('checkbox', checkbox.current?.checked);
@@ -51,15 +53,7 @@ function App() {
         <button className='add' type='button' onClick={addItem}>добавить</button>
       </form>
       <ul className='list'>
-        {items.map(item => (
-          <li className='item' key={item.id}>
-            <div className='left'>
-              <input className='checkbox' type="checkbox"  ref={checkbox} />
-              <div className={`deal ${checkbox.current?.checked && 'done'}`}>{item.title}</div>
-            </div>
-            <button className='remove' type='button'>&#10006;</button>
-          </li>
-        ))}
+        {items.map(item => <Item title={item.title} key={item.id} />)}
       </ul>
     </div>
   );

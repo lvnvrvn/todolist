@@ -16,10 +16,6 @@ function App() {
   }
 
   useEffect(() => {
-    // items.forEach(item => {
-    //   localStorage.setItem(item.id, JSON.stringify(item))
-    // });
-    
     if (localStorage.length > 0) {
       setItems(getItemsArrayFromLS());
     } else {
@@ -43,33 +39,16 @@ function App() {
       initialItems.forEach(item => {
         localStorage.setItem(item.id, JSON.stringify(item));
       });
+      window.dispatchEvent(new Event('storage'))
       setItems(getItemsArrayFromLS()); //  вывод на страницу
     }
   }, []);
 
-  // useEffect(() => {
-  //   const lastItem = items[items.length - 1];
-  //   localStorage.setItem(lastItem.id, JSON.stringify(lastItem));
-  // });
-
-  // useEffect(() => {
-  //   console.log('hi')
-  //   if (localStorage.length) {
-  //     setItems(getItemsArrayFromLS());
-  //   }  
-  // }, [localStorage.length]);
-
   useEffect(() => {
     function stateItemsAdding() {
-      // setItems(getItemsArrayFromLS());
-      console.log('updated');
+      setItems(getItemsArrayFromLS());
     }
     window.addEventListener('storage', stateItemsAdding);
-    console.log('added');
-    // window.onstorage = () => {
-    //   console.log('added');
-    // }
-    
 
     return () => {
       window.removeEventListener('storage', stateItemsAdding);
@@ -82,26 +61,18 @@ function App() {
   console.log(localStorage.length);
 
   function addItem() { //заменить setitem на добавление нового item в localstorage
-    // setItems([...items, {
-    //   id: items.length + 1,
-    //   title: input.current.value,
-    //   isDone: false
-    // }]);
-    // console.log(items);
-
     localStorage.setItem(localStorage.length + 1, JSON.stringify({
       id: localStorage.length + 1,
       title: input.current.value,
       isDone: false
     }));
-    
+    window.dispatchEvent(new Event('storage'))
     input.current.value = '';
   }
 
   function removeItem(id) {
     localStorage.removeItem(id);
-    // const newItems = items.filter(item => item.id !== id);
-    // setItems(newItems);
+    window.dispatchEvent(new Event('storage'))
   }
 
   function clear() {

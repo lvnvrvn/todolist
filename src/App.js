@@ -7,12 +7,12 @@ function App() {
 
   const input = useRef(null);
 
-  function addItemsFromLS() {
+  function getItemsArrayFromLS() {
     const storageItems = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        storageItems.push(JSON.parse(localStorage.getItem(localStorage.key(i)))); // в фунцкию отдельную вынести
-      }
-    setItems(storageItems);
+    for (let i = 0; i < localStorage.length; i++) {
+      storageItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+    }
+    return storageItems;
   }
 
   useEffect(() => {
@@ -21,9 +21,9 @@ function App() {
     // });
     
     if (localStorage.length > 0) {
-      addItemsFromLS();
+      setItems(getItemsArrayFromLS());
     } else {
-      setItems([
+      const initialItems = [
         {
           id: 1,
           title: 'купить хлеб',
@@ -39,7 +39,11 @@ function App() {
           title: 'почитать журнал',
           isDone: true
         }
-      ]);
+      ];
+      initialItems.forEach(item => {
+        localStorage.setItem(item.id, JSON.stringify(item));
+      });
+      setItems(getItemsArrayFromLS()); //  вывод на страницу
     }
   }, []);
 
@@ -48,9 +52,34 @@ function App() {
   //   localStorage.setItem(lastItem.id, JSON.stringify(lastItem));
   // });
 
+  // useEffect(() => {
+  //   console.log('hi')
+  //   if (localStorage.length) {
+  //     setItems(getItemsArrayFromLS());
+  //   }  
+  // }, [localStorage.length]);
+
   useEffect(() => {
-    addItemsFromLS();  
-  }, [localStorage.length]);
+    function stateItemsAdding() {
+      // setItems(getItemsArrayFromLS());
+      console.log('updated');
+    }
+    window.addEventListener('storage', stateItemsAdding);
+    console.log('added');
+    // window.onstorage = () => {
+    //   console.log('added');
+    // }
+    
+
+    return () => {
+      window.removeEventListener('storage', stateItemsAdding);
+      console.log('removed');
+    };
+  }, []);
+
+  
+
+  console.log(localStorage.length);
 
   function addItem() { //заменить setitem на добавление нового item в localstorage
     // setItems([...items, {
@@ -60,11 +89,11 @@ function App() {
     // }]);
     // console.log(items);
 
-    localStorage.setItem(localStorage.length + 1, {
+    localStorage.setItem(localStorage.length + 1, JSON.stringify({
       id: localStorage.length + 1,
       title: input.current.value,
       isDone: false
-    });
+    }));
     
     input.current.value = '';
   }
@@ -78,12 +107,6 @@ function App() {
   function clear() {
     input.current.value = '';
   }
-
-  // function onEnter(e) {
-  //   if (e.keyCode === 13) {
-  //     addItem();
-  //   }
-  // }
 
   function onEnter(event) {
     if (event.keyCode === 13) {
@@ -108,3 +131,5 @@ function App() {
 }
 
 export default App;
+
+//как отслеживать изменения в localstorage
